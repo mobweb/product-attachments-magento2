@@ -62,8 +62,8 @@ class Attachment extends Action
 
         if ($attachment instanceof AttachmentInterface) {
             try {
-                $this->downloadProcessor->processDownload($attachment);
-                return $this->_response;
+                // Return the file response created by the download processor (required since Magento 2.4.7)
+                return $this->downloadProcessor->processDownload($attachment);
             } catch (FileSystemException $exception) {
                 $this->messageManager->addErrorMessage(__('Sorry, there was an error getting requested content.'));
             }

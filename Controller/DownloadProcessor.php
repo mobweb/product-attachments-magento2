@@ -57,14 +57,17 @@ class DownloadProcessor
 
     /**
      * @param AttachmentInterface $attachment
-     * @return void
+     * @return \Magento\Framework\App\ResponseInterface
      * @throws FileSystemException
      */
-    public function processDownload(AttachmentInterface $attachment): void
+    public function processDownload(AttachmentInterface $attachment): \Magento\Framework\App\ResponseInterface
     {
         try {
             $name = basename($this->downloadResourceResolver->resolveResource($attachment));
-            $this->fileFactory->create(
+
+            // Return the file response: since Magento 2.4.7, FileFactory::create() no longer sends
+            // the file itself, but returns a new response object that has to be returned by the controller
+            return $this->fileFactory->create(
                 $name,
                 [
                     'type' => 'string',
